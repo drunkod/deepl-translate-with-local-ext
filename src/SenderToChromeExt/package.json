@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "chrome-remote-interface": "^0.32.0",
+    "node-dbus-notifier": "^0.3.6"
+  }
+}

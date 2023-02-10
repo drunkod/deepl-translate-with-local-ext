@@ -1,7 +1,7 @@
 {
-  "name": "deepl-translate",
-  "displayName": "deepl-translate",
-  "description": "deepl translate source for comment-translate",
+  "name": "deepl-translate-local",
+  "displayName": "deepl-translate-local",
+  "description": "deepl translate source for comment-translate from chrome extension",
   "version": "0.0.2",
   "publisher": "intellsmi",
   "engines": {
@@ -70,7 +70,7 @@
           "deeplTranslate.PathToExtention": {
             "type": "string",
             "default": "/home/alex/Загрузки/cofdbpoegempjloogbagkncekinflcnj/node.js",
-            "markdownDescription": "Set dir of deepl extention"
+            "markdownDescription": "Set dir of deepl chrome extention"
           }
         }
       }
@@ -98,6 +98,7 @@
     "@typescript-eslint/eslint-plugin": "^5.1.0",
     "@typescript-eslint/parser": "^5.1.0",
     "@vscode/test-electron": "^1.6.2",
+    "@vscode/vsce": "^2.17.0",
     "eslint": "^8.1.0",
     "glob": "^7.1.7",
     "mocha": "^9.1.3",
