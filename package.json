@@ -66,6 +66,11 @@
             ],
             "default": "default",
             "markdownDescription": "Sets whether the translated text should lean towards formal or informal language. [More](https://www.deepl.com/zh/docs-api/translating-text/request/)"
+          },
+          "deeplTranslate.PathToExtention": {
+            "type": "string",
+            "default": "/home/alex/Загрузки/cofdbpoegempjloogbagkncekinflcnj/node.js",
+            "markdownDescription": "Set dir of deepl extention"
           }
         }
       }
@@ -101,6 +106,7 @@
   "dependencies": {
     "axios": "0.21.4",
     "comment-translate-manager": "^0.0.2",
-    "querystring": "^0.2.1"
+    "querystring": "^0.2.1",
+    "execa": "6.1.0"
   }
 }
