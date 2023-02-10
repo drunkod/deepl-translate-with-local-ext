@@ -1,10 +1,11 @@
-import axios from 'axios';
-const querystring = require('querystring');
-// const { exec } = require("child_process");
-const execa = require("execa");
+/* eslint-disable @typescript-eslint/naming-convention */
+// import axios from 'axios';
+const util = require('node:util');
+const exec = util.promisify(require('node:child_process').exec);
+// import querystring from 'query-string';
 
 import { workspace } from 'vscode';
-import { ITranslate, ITranslateOptions } from 'comment-translate-manager';
+import { ITranslate } from 'comment-translate-manager';
 
 //константа, содержащая префикс конфигурации для deeplTranslate
 const PREFIXCONFIG = 'deeplTranslate';
@@ -40,6 +41,18 @@ export type DeepLPreserveFormatting = '0' | '1';
 export type DeepLFormality = "default" | "more" | "less";
 
 export type DeepLPathToExtention = "/home/alex/Загрузки/cofdbpoegempjloogbagkncekinflcnj/node.js";
+
+export type notify = false;
+
+export type sourceLang = 'en';
+
+export interface ITranslateOptions {
+  from?: string;
+  to: string;
+  sourceLang?: string;
+  notify?: boolean;
+
+}
 
 //интерфейс для параметров, переданных в DeepLTranslate
 interface DeepLTranslateOption {
@@ -104,36 +117,10 @@ export class DeepLTranslate implements ITranslate {
     return defaultOption;
   }
 
-  //метод перевода для выполнения POST-запроса к DeepL API и возврата переведенного текста
-  async translate_copy(content: string, { to = 'auto' }: ITranslateOptions) {
-      //определяем поддомен на основе значения 'apiFree' в конфигурации
-      const subDomain = this._defaultOption.apiFree ? 'api-free' : 'api';
-      //URL для запроса API
-      const url = `https://${subDomain}.deepl.com/v2/translate`;
 
-      //выдать ошибку, если 'authKey' отсутствует в конфигурации
-    if (!this._defaultOption.authKey) {
-      throw new Error('Please check the configuration of authKey!');
-    }
-
-    //данные для отправки в запросе API
-    const data = {
-      text: content,
-      target_lang: convertLang(to),
-      auth_key: this._defaultOption.authKey,
-      preserve_formatting: this._defaultOption.preserveFormatting,
-      formality: this._defaultOption.formality,
-    };
-
-    //сделать запрос API, используя библиотеку axios
-    let res = await axios.post<Response>(url, querystring.stringify(data));
-
-    //вернуть переведенный текст из ответа API
-    return res.data.translations[0].text;
-  }
   
   //метод перевода для выполнения POST-запроса к DeepL API и возврата переведенного текста
-  async translate(content: string, { to = 'auto' }: ITranslateOptions) {
+  // async translate(content: string, { to = 'auto' }: ITranslateOptions) {
     // //определяем поддомен на основе значения 'apiFree' в конфигурации
     // const subDomain = this._defaultOption.apiFree ? 'api-free' : 'api';
     // //URL для запроса API
@@ -152,15 +139,29 @@ export class DeepLTranslate implements ITranslate {
 //     preserve_formatting: this._defaultOption.preserveFormatting,
 //     formality: this._defaultOption.formality,
 //   };
-  let { stdout } = await execa("node", [
-    this._defaultOption.PathToExtention,
-    content,
-    to
-  ]);
+  // const { stdout } = await execa("node", [
+  //   this._defaultOption.PathToExtention,
+  //   content,
+  //   to
+  // ]);
 
-  //вернуть переведенный текст из ответа API
-  return stdout;
+  // //вернуть переведенный текст из ответа API
+//   return 'stdout';
+// }
+
+async translate(text: string, options: ITranslateOptions) {
+  const command = `node ${this._defaultOption.PathToExtention} "${text}" en`;
+
+  try {
+    const { stdout, stderr } = await exec(command);
+    console.log('stdout:', stdout);
+    console.error('stderr:', stderr);
+    return stdout;
+  } catch (err) {
+    throw new Error(err);
+  }
 }
+
 
   //метод ссылки для создания ссылки DeepL для предоставленного контента и целевого языка
   link(content: string, { to = 'auto' }: ITranslateOptions) {
